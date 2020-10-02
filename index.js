@@ -83,17 +83,23 @@ const resetKeywordsUl = () => {
     document.querySelector(".inputKeywordsHandle ul").innerHTML = '';
 }
 
-// TODO : Modify this function to pass the keyword in lowercase and remove special characters
+// Modify this function to pass the keyword in lowercase and remove special characters
 const cleanedKeyword = (keyword) => {
     let cleanedKeyword = keyword.toLowerCase().replace(/[^\w\s]/gi, '');
     return cleanedKeyword;
 }
 
 // We reload the articles depends of the currentKeywords
-// TODO : Modify this function to return the articles containing at leat one of the selected keywords.
+// TODO : Modify this function to return the articles containing at least one of the selected keywords.
 const reloadArticles = () => {
-    document.querySelector(".articlesList").innerHTML = ""
-    let articlesToShow = data.articles;
+    document.querySelector(".articlesList").innerHTML = "";
+  let articlesToShow = data.articles.filter((article) =>
+    article.tags.some((tag) => currentKeywords.includes(tag))
+  );
+
+  if (currentKeywords.length == 0) {
+    articlesToShow = data.articles;
+  }
 
     articlesToShow.forEach(article => {
         document.querySelector(".articlesList").innerHTML += `
@@ -112,14 +118,19 @@ const showKeywordsList = (value) => {
     // Starting at 3 letters inserted in the forme, we start to do something
     if (value.length >= 3) {
         const keyWordUl = document.querySelector(".inputKeywordsHandle ul");
+        allKeywords.forEach((keyword) => {
+            if (keyword.toLowerCase().includes(value)) {
+              document.querySelector("input[type='text']").value = keyword;
+              keyWordUl.innerHTML += `
+              <li onclick="addNewKeyword('${keyword}', '${cleanedKeyword(
+                keyword
+              )}')">${keyword}</li>
+                `;
+              console.log(keyWordUl.innerHTML);
+            }
+          });
+        }
         resetKeywordsUl();
-        
-        // This will allow you to add a new element in the list under the text input
-        // On clic, we add the keyword
-        // keyWordUl.innerHTML += `
-        //    <li onclick="addNewKeyword('${keyword}', '${cleanedKeyword(keyword)}')">${keyword}</li>
-        // `;
-    }
 }
 
 // Once DOM (you will se what it is last week) is loaded, we get back our form and we prevent the initial comportment from the navigator : reload the page when it is submitted. Then we call the function
