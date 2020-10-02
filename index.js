@@ -85,8 +85,7 @@ const resetKeywordsUl = () => {
 
 // TODO : Modify this function to pass the keyword in lowercase and remove special characters
 const cleanedKeyword = (keyword) => {
-    let cleanedKeyword = keyword;
-
+    let cleanedKeyword = keyword.toLowerCase().replace(/[^\w\s]/gi, '');
     return cleanedKeyword;
 }
 
